@@ -2,7 +2,9 @@ import pickle
 import logging
 from threading import Thread, current_thread
 from redis import Redis, BlockingConnectionPool
-from . import config, tasks
+
+import config
+import tasks
 
 logging.basicConfig(level=logging.INFO)
 
@@ -16,7 +18,7 @@ REGISTERED_TASKS = {
 redis_conn = Redis(
     host=config.REDIS_HOST,
     port=config.REDIS_PORT,
-    connection_pool=BlockingConnectionPool(max_connections=config.REDIS_POOL_SIZE),
+    # connection_pool=BlockingConnectionPool(max_connections=config.REDIS_POOL_SIZE),
 )
 
 

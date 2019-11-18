@@ -1,0 +1,17 @@
+version: '3.7'
+services:
+  worker:
+    build: worker/.
+    tty: true
+    depends_on:
+      - redis
+    links:
+      - redis
+    volumes:
+      - "./worker:/usr/src/app"
+    environment:
+      - REDIS_HOST=redis
+  redis:
+    image: redis
+volumes:
+  worker:
