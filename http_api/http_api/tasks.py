@@ -8,7 +8,7 @@ from . import config
 redis_conn = Redis(
     host=config.REDIS_HOST,
     port=config.REDIS_PORT,
-    connection_pool=BlockingConnectionPool(max_connections=config.REDIS_POOL_SIZE),
+    # connection_pool=BlockingConnectionPool(max_connections=config.REDIS_POOL_SIZE),
 )
 
 

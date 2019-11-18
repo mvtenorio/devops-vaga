@@ -1,5 +1,19 @@
 version: '3.7'
 services:
+  api:
+    build: http_api/.
+    tty: true
+    depends_on:
+      - worker
+    links:
+      - redis
+    volumes:
+      - "./http_api:/usr/src/app"
+    environment:
+      - FLASK_APP=wsgi.py
+      - REDIS_HOST=redis
+    ports:
+      - "5000:5000"
   worker:
     build: worker/.
     tty: true
@@ -13,5 +27,4 @@ services:
       - REDIS_HOST=redis
   redis:
     image: redis
-volumes:
-  worker:
+
