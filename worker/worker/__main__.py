@@ -1,5 +1,6 @@
 import pickle
 import logging
+import time
 from threading import Thread, current_thread
 from redis import Redis, BlockingConnectionPool
 
@@ -11,9 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("worker")
 
 
-REGISTERED_TASKS = {
-    "randomize_image": tasks.randomize_image,
-}
+REGISTERED_TASKS = {"randomize_image": tasks.randomize_image}
 
 redis_conn = Redis(
     host=config.REDIS_HOST,
@@ -27,26 +26,32 @@ def _worker():
     while True:
         _, payload = redis_conn.blpop(["tasks"])
         task = pickle.loads(payload)
-        logger.info(f"Received task: %s", repr(task["token"]))
-        redis_conn.set(
-            "result:" + task["token"], pickle.dumps({"status": "received"}),
-        )
+        logger.info("Received task: %s", repr(task["token"]))
+        initial_execution_time = time.perf_counter()
+        redis_conn.set("result:" + task["token"], pickle.dumps({"status": "received"}))
 
         task_fn = REGISTERED_TASKS.get(task["func"])
         if task_fn is None:
-            logger.warning(f"Unknown task: %s", task["func"])
+            logger.warning("Unknown task: %s", task["func"])
             continue
 
         try:
             result = task_fn(**task["payload"])
 
-            logger.info(f"Task %s succeeded.", task["token"])
+            lead_time = time.perf_counter() - task["initial_time"]
+            execution_time = time.perf_counter() - initial_execution_time
+            logger.info(
+                "Task %s succeeded\nLead time: %s\nExecution time: %s",
+                task["token"],
+                str(lead_time),
+                str(execution_time),
+            )
             redis_conn.set(
                 "result:" + task["token"],
                 pickle.dumps({"status": "finished", "result": result}),
             )
         except Exception as exc:
-            logger.warning(f"Task %s failed: %s", task["token"], str(exc))
+            logger.warning("Task %s failed: %s", task["token"], str(exc))
             import traceback
 
             traceback.print_exc()
@@ -61,6 +66,7 @@ thread_pool = []
 for n in range(config.WORKER_THREADS):
     t = Thread(target=_worker, name=f"worker-{n}")
     t.start()
+    thread_pool.append(t)
 
 
 for t in thread_pool:

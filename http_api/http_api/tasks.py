@@ -27,6 +27,7 @@ def enqueue_randomize_image_task(image_bytes):
                 "func": "randomize_image",
                 "token": task_token,
                 "payload": {"data": image_bytes},
+                "initial_time": time.perf_counter(),
             }
         ),
     )
