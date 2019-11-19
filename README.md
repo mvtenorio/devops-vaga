@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/mvtenorio/devops-vaga.svg?branch=master)](https://travis-ci.com/mvtenorio/devops-vaga)
+
 # Vaga Devops - SpaceTime Labs
 
 Esse projeto contém uma mini aplicação desenvolvida em Python. Nós
@@ -54,7 +56,7 @@ Para enviar uma imagem para processamento:
 
 Arquivo ./cat.png
 
-![Gato](./cat.png)
+![Gato](./worker/worker/cat.png)
 
 Fonte: https://www.pexels.com/photo/orange-tabby-cat-near-window-2071873/
 
@@ -78,7 +80,7 @@ Para pegar o resultado de uma tarefa:
 $ curl http://localhost:5000/randomize/<token>/result > ./out.png
 ```
 
-![Gato Aleatório](./out.png)
+![Gato Aleatório](./worker/worker/out.png)
 
 ## Mão na Massa!
 
