@@ -1,0 +1,7 @@
+language: python
+services:
+  - docker
+install:
+  - docker-compose up
+script:
+  - docker-compose exec worker pipenv run pytest
