@@ -7,6 +7,6 @@ RUN pip install pipenv
 COPY Pipfile .
 COPY Pipfile.lock .
 
-RUN pipenv install
+RUN pipenv install --dev
 
 CMD ["pipenv", "run", "flask", "run", "--host=0.0.0.0"]

@@ -33,3 +33,22 @@ def enqueue_randomize_image_task(image_bytes):
     )
 
     return task_token
+
+
+def enqueue_sum_even_numbers(text_bytes):
+    task_token = uuid4().hex
+
+    redis_conn.set("result:" + task_token, pickle.dumps({"status": "requested"}))
+    redis_conn.rpush(
+        "tasks",
+        pickle.dumps(
+            {
+                "func": "sum_even_numbers",
+                "token": task_token,
+                "payload": {"data": text_bytes},
+                "initial_time": time.perf_counter(),
+            }
+        ),
+    )
+
+    return task_token

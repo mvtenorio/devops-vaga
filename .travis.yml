@@ -3,4 +3,5 @@ services:
 install:
   - docker-compose up -d
 script:
+  - docker-compose exec api pipenv run pytest
   - docker-compose exec worker pipenv run pytest

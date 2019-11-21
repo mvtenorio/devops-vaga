@@ -12,7 +12,10 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("worker")
 
 
-REGISTERED_TASKS = {"randomize_image": tasks.randomize_image}
+REGISTERED_TASKS = {
+    "randomize_image": tasks.randomize_image,
+    "sum_even_numbers": tasks.sum_even_numbers,
+}
 
 redis_conn = Redis(
     host=config.REDIS_HOST,

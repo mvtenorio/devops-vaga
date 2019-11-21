@@ -32,3 +32,11 @@ def randomize_image(data, block_size=(60, 60)):
     out.seek(0)
 
     return out.read()
+
+
+def sum_even_numbers(data):
+    _file = BytesIO(data)
+    row = _file.readline()
+    numbers = row.split()
+
+    return sum([int(n) for n in numbers if int(n) % 2 == 0])
